@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Task_99 {
-
     public int sumWide(Node root) {
         MyQueue stack = new MyQueue();
         stack.add(root);
@@ -29,7 +28,9 @@ public class Task_99 {
         char[][][] field = null;
         StringBuilder str = new StringBuilder();
         Node prince = null;
+        Node quenn = null;
         MyQueue q = new MyQueue();
+        ArrayList<Node> check = new ArrayList<>();
 
         try (BufferedReader in = new BufferedReader(new FileReader("input.txt"))) {
             Scanner scan = new Scanner(in);
@@ -52,48 +53,15 @@ public class Task_99 {
                         prince = new Node(i, j, k);
 
                     }
+                    if (field[i][j][k] == '2') {
+                        quenn = new Node(i, j, k);
+
+                    }
+
                 }
             }
         }
 
-        prince.setAvailable(true);
-        q.add(prince);
-
-        while (!q.isEmpty()) {
-            Node curent;
-            curent = q.peek();
-            System.out.println("текущая позиция z" + curent.getZ());
-            q.remove();
-
-            if (field[curent.getZ()][curent.getX()][curent.getY()] == '2') {  // роверяем нашли или нет принцесу
-                count++;
-                return;
-            }
-
-            if (curent.getX() != 0 || field[curent.getZ()][curent.getX() - 1][curent.getY()] != 'o' || !curent.isAvailable()) { //проверяем левую ячейку
-                q.add(new Node(curent.getZ(), curent.getX() - 1, curent.getY(), true));
-            }
-
-            if (curent.getY() != 0 || field[curent.getZ()][curent.getX()][curent.getY() - 1] != 'o' || !curent.isAvailable()) { //проверяем верхнюю ячейку
-                q.add(new Node(curent.getZ(), curent.getX(), curent.getY() - 1, true));
-            }
-
-            if (curent.getX() != row-1 || field[curent.getZ()][curent.getX() + 1][curent.getY()] != 'o' || !curent.isAvailable()) { //проверяем правую ячейку
-                q.add(new Node(curent.getZ(), curent.getX() + 1, curent.getY(), true));
-            }
-            if (curent.getY() != column-1 || field[curent.getZ()][curent.getX()][curent.getY() + 1 ] != 'o' || !curent.isAvailable()) { //проверяем нижняя ячейку
-                q.add(new Node(curent.getZ(), curent.getX() - 1, curent.getY(), true));
-            }
-
-
-        }
-
-        System.out.println("Поиск завершен");
-    }
-}
-
-
-/*        System.out.println(prince.getZ() + prince.getX() + prince.getY());
         for (int i = 0; i <block ; i++) {
             for (int j = 0; j < row; j++) {
                 for (int k = 0; k < column; k++) {
@@ -102,8 +70,70 @@ public class Task_99 {
                 System.out.println();
             }
             System.out.println();
-        }*/
+        }
 
+
+        q.add(prince);
+        System.out.println(quenn.getZ() + " " + quenn.getX() + " " + quenn.getY());
+        System.out.println(prince.getZ() + " " + prince.getX() + " " + prince.getY());
+        while (!q.isEmpty()) {
+            Node curent;
+            curent = q.peek();
+            curent.setVisited(true);
+            check.add(curent);
+            System.out.println("текущая позиция z " + curent.getZ());
+            System.out.println("текущая позиция x " + curent.getX());
+            System.out.println("текущая позиция y " + curent.getY());
+            q.remove();
+
+            if (field[curent.getZ()][curent.getX()][curent.getY()] == '2') {  // роверяем нашли или нет принцесу
+                count++;
+                System.out.println("в цикле с принцессой");
+                return;
+            }
+
+            if (curent.getX() != 0) {
+                if (field[curent.getZ()][curent.getX() - 1][curent.getY()] != 'o' || !check(new Node(curent.getZ(), curent.getX() - 1, curent.getY()),check))//проверяем левую ячейку
+                    q.add(new Node(curent.getZ(), curent.getX() - 1, curent.getY()));
+              /*  System.out.println("текущая позиция z " + curent.getZ());
+                System.out.println("текущая позиция x " + curent.getX());
+                System.out.println("текущая позиция y " + curent.getY());*/
+                System.out.println("После проверки выхода в левую ячейку");
+            }
+
+            if (curent.getY() != 0  && curent.getY() != column-1)
+                if (field[curent.getZ()][curent.getX()][curent.getY() + 1] != 'o' || !check(new Node(curent.getZ(), curent.getX(), curent.getY() + 1),check) ) { //проверяем верхнюю ячейку
+                    q.add(new Node(curent.getZ(), curent.getX(), curent.getY() + 1));
+                }
+
+            if (curent.getX() != row - 1) {
+                if (field[curent.getZ()][curent.getX() + 1][curent.getY()] != 'o' || !check(new Node(curent.getZ(), curent.getX() + 1, curent.getY()),check)) { //проверяем правую ячейку
+                    q.add(new Node(curent.getZ(), curent.getX() + 1, curent.getY()));
+                }
+            }
+
+            if (curent.getY() != column - 1) {
+                if (field[curent.getZ()][curent.getX()][curent.getY() + 1] != 'o' || !check(new Node(curent.getZ(), curent.getX(), curent.getY()+1),check) ) { //проверяем нижняя ячейку
+                    q.add(new Node(curent.getZ(), curent.getX(), curent.getY()+1));
+                }
+            }
+
+        }
+        System.out.println("count = " + count);
+        System.out.println("Поиск завершен");
+    }
+
+
+    public static boolean check(Node node, ArrayList<Node> list){
+        boolean flag = false;
+        for (Node n : list) {
+            if(node.getY() == n.getY() && node.getZ() == n.getZ() &&  node.getX() == n.getX()){
+                flag = n.isVisited();
+            }
+        }
+        return flag;
+    }
+}
 
 
 class Node{
@@ -111,26 +141,21 @@ class Node{
     private int x;
     private int y;
     private int z;
-    private boolean isAvailable;
+    private boolean isVisited;
 
     public Node() {
     }
 
-    public Node(int z, int x, int y) {
+    public Node(int z, int y, int x) {
         this.z = z;
         this.x = x;
         this.y = y;
+        this.isVisited = false;
     }
 
-    public Node(int z, int i, int y, boolean setAvailable) {
-        this.z = z;
-        this.x = x;
-        this.y = y;
-        this.isAvailable = setAvailable ;
-    }
 
-    public boolean isAvailable() {
-        return isAvailable;
+    public boolean isVisited() {
+        return isVisited;
     }
 
     public int getX() {
@@ -157,10 +182,11 @@ class Node{
         this.z = z;
     }
 
-    public void setAvailable(boolean available) {
-        isAvailable = available;
+    public void setVisited(boolean visited) {
+        isVisited = visited;
     }
 }
+
  class MyQueue{
 
     ArrayList<Node> list = new ArrayList<>();
