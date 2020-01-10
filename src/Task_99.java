@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -63,19 +64,22 @@ public class Task_99 {
             check.add(curent);
             q.remove();
 
-            if (field[curent.getZ()][curent.getY()][curent.getX()] == '2') {
+/*            if (field[curent.getZ()][curent.getY()][curent.getX()] == '2') {
                 System.out.println("e ghbywtcs");
                 result++;
                 System.out.println(result);
                 System.out.println("count = " + result*5);
                 System.out.println("Поиск завершен");
                 return;
-            }
+            }*/
 
             if (curent.getX() != 0) {
                 if (field[curent.getZ()][curent.getY()][curent.getX() - 1] != 'o') {
                     if (!check(new Node(curent.getZ(), curent.getY(), curent.getX() - 1), check)) {
-
+                        if(field[curent.getZ()][curent.getY()][curent.getX() - 1] == '2'){
+                            System.out.println("Нашли");
+                            break;
+                        }
                         q.add(new Node(curent.getZ(), curent.getY(), curent.getX() - 1));
                         System.out.println("Лево");
 
@@ -86,6 +90,10 @@ public class Task_99 {
             if (curent.getY() != 0)
                 if (field[curent.getZ()][curent.getY() - 1][curent.getX()] != 'o') {
                     if (!check(new Node(curent.getZ(), curent.getY() - 1, curent.getX()), check)) {
+                        if(field[curent.getZ()][curent.getY() - 1][curent.getX()] == '2'){
+                            System.out.println("Нашли");
+                            break;
+                        }
                         q.add(new Node(curent.getZ(), curent.getY() - 1, curent.getX()));
                         System.out.println("Вверх");
                     }
@@ -94,7 +102,10 @@ public class Task_99 {
             if (curent.getX() != column - 1) {
                 if (field[curent.getZ()][curent.getY()][curent.getX() + 1] != 'o') {
                     if (!check(new Node(curent.getZ(), curent.getY(), curent.getX() + 1), check)) {
-
+                        if(field[curent.getZ()][curent.getY()][curent.getX() + 1]=='2'){
+                            System.out.println("Нашли");
+                            break;
+                        }
                             q.add(new Node(curent.getZ(), curent.getY(), curent.getX() + 1));
                         System.out.println("право");
                         }
@@ -105,7 +116,10 @@ public class Task_99 {
             if (curent.getY() != row - 1) {
                 if (field[curent.getZ()][curent.getY() + 1][curent.getX()] != 'o') {
                     if (!check(new Node(curent.getZ(), curent.getY() + 1, curent.getX()), check)) {
-
+                        if(field[curent.getZ()][curent.getY() + 1][curent.getX()] =='2'){
+                            System.out.println("Нашли");
+                            break;
+                        }
                         q.add(new Node(curent.getZ(), curent.getY() + 1, curent.getX()));
                         System.out.println("Вниз");
                     }
@@ -115,12 +129,23 @@ public class Task_99 {
             if (curent.getZ() != block - 1) {
                 if (field[curent.getZ()+1][curent.getY()][curent.getX()] != 'o') {
                     if (!check(new Node(curent.getZ() + 1, curent.getY(), curent.getX()), check)) {
-
+                        if(field[curent.getZ()+1][curent.getY()][curent.getX()] =='2'){
+                            System.out.println("Нашли");
+                            break;
+                        }
                         q.add(new Node(curent.getZ()+1, curent.getY() , curent.getX()));
                         System.out.println("Вглубь");
                     }
                 }
             }
+        }
+
+        result = result*5;
+        System.out.println("count = " + result);
+        try (FileWriter output = new FileWriter("output.txt")) {
+            output.write(String.valueOf(result));
+        } catch (IOException | NumberFormatException e1) {
+            e1.printStackTrace();
         }
 
     }
