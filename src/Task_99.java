@@ -5,19 +5,6 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Task_99 {
-    public int sumWide(Node root) {
-        MyQueue stack = new MyQueue();
-        stack.add(root);
-
-        int summ = 0;
-
-        while (!stack.isEmpty()) {
-            Node node = stack.remove();
-
-        }
-        return summ;
-    }
-
 
     public static void main(String[] args) {
 
@@ -25,10 +12,10 @@ public class Task_99 {
         int row = 0;
         int column = 0;
         int count = 0;
+        int result = 0;
         char[][][] field = null;
         StringBuilder str = new StringBuilder();
         Node prince = null;
-        Node quenn = null;
         MyQueue q = new MyQueue();
         ArrayList<Node> check = new ArrayList<>();
 
@@ -44,7 +31,7 @@ public class Task_99 {
         } catch (IOException | NumberFormatException e) {
             e.printStackTrace();
         }
-        String str1 = str.toString();                   //Инициализация переменных
+        String str1 = str.toString();
         for (int i = 0; i < block; i++) {
             for (int j = 0; j < row; j++) {
                 for (int k = 0; k < column; k++) {
@@ -53,11 +40,6 @@ public class Task_99 {
                         prince = new Node(i, j, k);
 
                     }
-                    if (field[i][j][k] == '2') {
-                        quenn = new Node(i, j, k);
-
-                    }
-
                 }
             }
         }
@@ -72,57 +54,76 @@ public class Task_99 {
             System.out.println();
         }
 
-
         q.add(prince);
-        System.out.println(quenn.getZ() + " " + quenn.getX() + " " + quenn.getY());
-        System.out.println(prince.getZ() + " " + prince.getX() + " " + prince.getY());
         while (!q.isEmpty()) {
+            result++;
             Node curent;
             curent = q.peek();
             curent.setVisited(true);
             check.add(curent);
-            System.out.println("текущая позиция z " + curent.getZ());
-            System.out.println("текущая позиция x " + curent.getX());
-            System.out.println("текущая позиция y " + curent.getY());
             q.remove();
 
-            if (field[curent.getZ()][curent.getX()][curent.getY()] == '2') {  // роверяем нашли или нет принцесу
-                count++;
-                System.out.println("в цикле с принцессой");
+            if (field[curent.getZ()][curent.getY()][curent.getX()] == '2') {
+                System.out.println("e ghbywtcs");
+                result++;
+                System.out.println(result);
+                System.out.println("count = " + result*5);
+                System.out.println("Поиск завершен");
                 return;
             }
 
             if (curent.getX() != 0) {
-                if (field[curent.getZ()][curent.getX() - 1][curent.getY()] != 'o' || !check(new Node(curent.getZ(), curent.getX() - 1, curent.getY()),check))//проверяем левую ячейку
-                    q.add(new Node(curent.getZ(), curent.getX() - 1, curent.getY()));
-              /*  System.out.println("текущая позиция z " + curent.getZ());
-                System.out.println("текущая позиция x " + curent.getX());
-                System.out.println("текущая позиция y " + curent.getY());*/
-                System.out.println("После проверки выхода в левую ячейку");
-            }
+                if (field[curent.getZ()][curent.getY()][curent.getX() - 1] != 'o') {
+                    if (!check(new Node(curent.getZ(), curent.getY(), curent.getX() - 1), check)) {
 
-            if (curent.getY() != 0  && curent.getY() != column-1)
-                if (field[curent.getZ()][curent.getX()][curent.getY() + 1] != 'o' || !check(new Node(curent.getZ(), curent.getX(), curent.getY() + 1),check) ) { //проверяем верхнюю ячейку
-                    q.add(new Node(curent.getZ(), curent.getX(), curent.getY() + 1));
-                }
+                        q.add(new Node(curent.getZ(), curent.getY(), curent.getX() - 1));
+                        System.out.println("Лево");
 
-            if (curent.getX() != row - 1) {
-                if (field[curent.getZ()][curent.getX() + 1][curent.getY()] != 'o' || !check(new Node(curent.getZ(), curent.getX() + 1, curent.getY()),check)) { //проверяем правую ячейку
-                    q.add(new Node(curent.getZ(), curent.getX() + 1, curent.getY()));
+                    }
                 }
             }
 
-            if (curent.getY() != column - 1) {
-                if (field[curent.getZ()][curent.getX()][curent.getY() + 1] != 'o' || !check(new Node(curent.getZ(), curent.getX(), curent.getY()+1),check) ) { //проверяем нижняя ячейку
-                    q.add(new Node(curent.getZ(), curent.getX(), curent.getY()+1));
+            if (curent.getY() != 0)
+                if (field[curent.getZ()][curent.getY() - 1][curent.getX()] != 'o') {
+                    if (!check(new Node(curent.getZ(), curent.getY() - 1, curent.getX()), check)) {
+                        q.add(new Node(curent.getZ(), curent.getY() - 1, curent.getX()));
+                        System.out.println("Вверх");
+                    }
+                }
+
+            if (curent.getX() != column - 1) {
+                if (field[curent.getZ()][curent.getY()][curent.getX() + 1] != 'o') {
+                    if (!check(new Node(curent.getZ(), curent.getY(), curent.getX() + 1), check)) {
+
+                            q.add(new Node(curent.getZ(), curent.getY(), curent.getX() + 1));
+                        System.out.println("право");
+                        }
+                    }
+                }
+
+
+            if (curent.getY() != row - 1) {
+                if (field[curent.getZ()][curent.getY() + 1][curent.getX()] != 'o') {
+                    if (!check(new Node(curent.getZ(), curent.getY() + 1, curent.getX()), check)) {
+
+                        q.add(new Node(curent.getZ(), curent.getY() + 1, curent.getX()));
+                        System.out.println("Вниз");
+                    }
                 }
             }
 
+            if (curent.getZ() != block - 1) {
+                if (field[curent.getZ()+1][curent.getY()][curent.getX()] != 'o') {
+                    if (!check(new Node(curent.getZ() + 1, curent.getY(), curent.getX()), check)) {
+
+                        q.add(new Node(curent.getZ()+1, curent.getY() , curent.getX()));
+                        System.out.println("Вглубь");
+                    }
+                }
+            }
         }
-        System.out.println("count = " + count);
-        System.out.println("Поиск завершен");
-    }
 
+    }
 
     public static boolean check(Node node, ArrayList<Node> list){
         boolean flag = false;
@@ -133,8 +134,8 @@ public class Task_99 {
         }
         return flag;
     }
-}
 
+}
 
 class Node{
 
@@ -148,8 +149,8 @@ class Node{
 
     public Node(int z, int y, int x) {
         this.z = z;
-        this.x = x;
         this.y = y;
+        this.x = x;
         this.isVisited = false;
     }
 
@@ -187,7 +188,7 @@ class Node{
     }
 }
 
- class MyQueue{
+class MyQueue{
 
     ArrayList<Node> list = new ArrayList<>();
 
