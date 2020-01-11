@@ -14,7 +14,6 @@ public class Task_99 {
         int column = 0;
         int count = 0;
         int countStep = 0;
-        boolean isDoMethod = false;
         char[][][] field = null;
         StringBuilder str = new StringBuilder();
         Node prince = null;
@@ -47,16 +46,6 @@ public class Task_99 {
             }
         }
 
-        for (int i = 0; i <block ; i++) {
-            for (int j = 0; j < row; j++) {
-                for (int k = 0; k < column; k++) {
-                    System.out.print(field[i][j][k]);
-                }
-                System.out.println();
-            }
-            System.out.println();
-        }
-
         q.add(prince);
         while (!q.isEmpty()) {
             countStep++;
@@ -68,7 +57,7 @@ public class Task_99 {
 
             if (curent.getZ() != block - 1) {
                 if (field[curent.getZ()+1][curent.getY()][curent.getX()] != 'o') {
-                    if (!check(new Node(curent.getZ() + 1, curent.getY(), curent.getX(),countStep), check)) {
+                    if (!check(new Node(curent.getZ() + 1, curent.getY(), curent.getX()), check)) {
                         if(field[curent.getZ()+1][curent.getY()][curent.getX()] =='2'){
                             queen = new Node(curent.getZ() + 1, curent.getY(), curent.getX(),countStep);
                             System.out.println("Нашли");
@@ -83,7 +72,7 @@ public class Task_99 {
 
             if (curent.getY() != row - 1) {
                 if (field[curent.getZ()][curent.getY() + 1][curent.getX()] != 'o') {
-                    if (!check(new Node(curent.getZ(), curent.getY() + 1, curent.getX(),countStep), check)) {
+                    if (!check(new Node(curent.getZ(), curent.getY() + 1, curent.getX()), check)) {
                         if(field[curent.getZ()][curent.getY() + 1][curent.getX()] =='2'){
                             queen = new Node(curent.getZ() , curent.getY() +1, curent.getX(),countStep);
                             System.out.println("Нашли");
@@ -97,14 +86,14 @@ public class Task_99 {
 
             if (curent.getX() != 0) {
                 if (field[curent.getZ()][curent.getY()][curent.getX() - 1] != 'o') {
-                    if (!check(new Node(curent.getZ(), curent.getY(), curent.getX() - 1,countStep), check)) {
+                    if (!check(new Node(curent.getZ(), curent.getY(), curent.getX() - 1), check)) {
                         if(field[curent.getZ()][curent.getY()][curent.getX() - 1] == '2'){
                             queen = new Node(curent.getZ() , curent.getY(), curent.getX()-1,countStep);
                             System.out.println("Нашли");
                             break;
                         }
                         q.add(new Node(curent.getZ(), curent.getY(), curent.getX() - 1,countStep));
-                        System.out.println("Лево");
+                       System.out.println("Лево");
 
                     }
                 }
@@ -112,7 +101,7 @@ public class Task_99 {
 
             if (curent.getY() != 0)
                 if (field[curent.getZ()][curent.getY() - 1][curent.getX()] != 'o') {
-                    if (!check(new Node(curent.getZ(), curent.getY() - 1, curent.getX(),countStep), check)) {
+                    if (!check(new Node(curent.getZ(), curent.getY() - 1, curent.getX()), check)) {
                         if(field[curent.getZ()][curent.getY() - 1][curent.getX()] == '2'){
                             queen = new Node(curent.getZ() , curent.getY()-1, curent.getX(),countStep);
                             System.out.println("Нашли");
@@ -125,7 +114,7 @@ public class Task_99 {
 
             if (curent.getX() != column - 1) {
                 if (field[curent.getZ()][curent.getY()][curent.getX() + 1] != 'o') {
-                    if (!check(new Node(curent.getZ(), curent.getY(), curent.getX() + 1,countStep), check)) {
+                    if (!check(new Node(curent.getZ(), curent.getY(), curent.getX() + 1), check)) {
                         if(field[curent.getZ()][curent.getY()][curent.getX() + 1]=='2'){
                             queen = new Node(curent.getZ() , curent.getY(), curent.getX()+1,countStep);
                             System.out.println("Нашли");
@@ -139,19 +128,16 @@ public class Task_99 {
         }
 
         countStep = wayRecovery(prince,queen,check)*5;
-        System.out.println("count = " + countStep);
         try (FileWriter output = new FileWriter("output.txt")) {
             output.write(String.valueOf(countStep));
         } catch (IOException | NumberFormatException e1) {
             e1.printStackTrace();
         }
-
     }
 
     public static boolean check(Node node, ArrayList<Node> list){
         boolean flag = false;
         for (Node n : list) {
-
             if(node.getY() == n.getY() && node.getZ() == n.getZ() &&  node.getX() == n.getX()){
                 flag = n.isVisited();
             }
@@ -163,39 +149,49 @@ public class Task_99 {
         int count = 0;
         Node current = null;
         current = endNode;
-        int step = current.getStep();
-        //принцесса
         while (!(startNode.getZ()==current.getZ() && startNode.getY() == current.getY()
         && startNode.getX() == current.getX())){
             count++;
             for (Node node : list) {
-                if (node.getZ()==current.getZ()-1 && node.getY() == current.getY()
-                        && node.getX() == current.getX() && node.getStep() < current.getStep()){
-                    current = node;
+                if (node.isVisited()){
+                    if (node.getZ() == current.getZ() - 1 && node.getY() == current.getY()
+                            && node.getX() == current.getX() && node.getStep() < current.getStep()) {
+                        System.out.println("node " + node.isVisited());
+                        node.setVisited(false);
+                        current = node;
+                        System.out.println("current " + current.isVisited());
+                    }
+            }
+                if (node.isVisited()) {
+                    if (node.getZ() == current.getZ() && node.getY() == current.getY() - 1
+                            && node.getX() == current.getX() && node.getStep() < current.getStep()) {
+                        node.setVisited(false);
+                        current = node;
+                    }
                 }
-
-                if (node.getZ()==current.getZ() && node.getY() == current.getY()-1
-                        && node.getX() == current.getX() && node.getStep() < current.getStep()){
-                    current = node;
-                }
-
+                if (node.isVisited()){
                 if (node.getZ()==current.getZ() && node.getY() == current.getY()+1
                         && node.getX() == current.getX() && node.getStep() < current.getStep()){
+                    node.setVisited(false);
                     current = node;
+                }}
+
+                if (node.isVisited()) {
+                    if (node.getZ() == current.getZ() && node.getY() == current.getY()
+                            && node.getX() == current.getX() + 1 && node.getStep() < current.getStep()) {
+                        node.setVisited(false);
+                        current = node;
+                    }
                 }
 
-                if (node.getZ()==current.getZ() && node.getY() == current.getY()
-                        && node.getX() == current.getX()+1 && node.getStep() < current.getStep()){
-                    current = node;
-                }
-
+                if (node.isVisited()){
                 if (node.getZ()==current.getZ() && node.getY() == current.getY()
                         && node.getX() == current.getX()-1 && node.getStep() < current.getStep()){
-                    current = node;
+                    node.setVisited(false);
+                    current = node;}
                 }
             }
         }
-        System.out.println("Востанавливаем дорогу " + count);
         return count;
     }
 }
@@ -209,6 +205,13 @@ class Node{
     private int step;
 
     public Node() {
+    }
+
+    public Node(int z, int y, int x) {
+        this.z = z;
+        this.y = y;
+        this.x = x;
+        this.isVisited = false;
     }
 
     public Node(int z, int y, int x, int step) {
