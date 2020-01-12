@@ -52,18 +52,6 @@ public class Task_99 {
             Node current = q.peek();
             q.remove();
 
-            if (current.getZ() < block - 1) {
-                if (field[current.getZ() + 1][current.getY()][current.getX()] == '2') {
-                    end = (wave[current.getZ()][current.getY()][current.getX()]);
-                    break;
-                } else if (field[current.getZ() + 1][current.getY()][current.getX()] == '.'
-                        && wave[current.getZ() + 1][current.getY()][current.getX()] == 0) {
-                    int c = 0;
-                    q.add(new Node(current.getZ() + 1, current.getY(), current.getX()));
-                    c = (wave[current.getZ()][current.getY()][current.getX()]);
-                    wave[current.getZ() + 1][current.getY()][current.getX()] = c + 1;
-                }
-            }
 
             if (current.getY() < row - 1) {
                 if (field[current.getZ()][current.getY() + 1][current.getX()] == '2') {
@@ -114,6 +102,21 @@ public class Task_99 {
                     q.add(new Node(current.getZ(), current.getY(), current.getX() + 1));
                     c = (wave[current.getZ()][current.getY()][current.getX()]);
                     wave[current.getZ()][current.getY()][current.getX() + 1] = c + 1;
+                }
+            }
+
+
+            if (current.getZ() < block - 1) {
+                if (field[current.getZ() + 1][current.getY()][current.getX()] == '2') {
+                    end = (wave[current.getZ()][current.getY()][current.getX()]);
+                    break;
+                } else if (field[current.getZ() + 1][current.getY()][current.getX()] == '.'
+                        && wave[current.getZ() + 1][current.getY()][current.getX()] == 0) {
+                    q.clear();
+                    int c = 0;
+                    q.add(new Node(current.getZ() + 1, current.getY(), current.getX()));
+                    c = (wave[current.getZ()][current.getY()][current.getX()]);
+                    wave[current.getZ() + 1][current.getY()][current.getX()] = c + 1;
                 }
             }
         }
